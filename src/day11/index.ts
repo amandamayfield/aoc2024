@@ -31,18 +31,37 @@ function blink(time: number, stones: Stone[]) {
         };
       }
     });
+    temp = temp.reduce((acc: Stone[], item) => {
+      let existingStone = acc.find((stone) => stone.value === item.value);
+      if (existingStone) {
+        let pos = acc.indexOf(existingStone);
+        acc[pos] = {
+          value: existingStone.value,
+          count: existingStone.count + item.count,
+        };
+      } else {
+        acc.push(item);
+      }
+      return acc;
+    }, []);
   }
   return temp;
 }
 
 function part1(rawInput: string) {
   const input = parseInput(rawInput);
+
   let total = 0;
+
   function solution1(input: Stone[]) {
     let result = blink(25, input);
-    total += result.length;
+    result.forEach((stone) => {
+      total += stone.count;
+    });
   }
+
   solution1(input);
+
   return total;
 }
 
@@ -52,8 +71,10 @@ function part2(rawInput: string) {
   let total = 0;
 
   function solution2(input: Stone[]) {
-    let result = blink(6, input);
-    total += result.length;
+    let result = blink(75, input);
+    result.forEach((stone) => {
+      total += stone.count;
+    });
   }
 
   solution2(input);
@@ -81,5 +102,5 @@ run({
     solution: part2,
   },
   trimTestInputs: true,
-  onlyTests: true,
+  onlyTests: false,
 });
